@@ -1,5 +1,7 @@
 # ThinkBox: Collaborative Brainstorming Platform
 
+
+TODO I HAVE YET TO IMPLEMENT 
 ## Core Session Features
 
 ### Session Management
