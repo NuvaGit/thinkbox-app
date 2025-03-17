@@ -1,23 +1,37 @@
-/* Modern minimalist landing page style */
-.minimalist-landing {
-  width: 100%;
+/* Immersive modern landing page style with creative elements */
+
+/* Base reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main container - fully immersive */
+.immersive-landing {
+  width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f1f1f1; /* Lighter grey background */
+  background-color: #1f2026; /* Dark grey base for depth */
   position: relative;
   overflow: hidden;
-  color: #333; /* Darker text for contrast */
+  color: white;
   transition: opacity 1.5s ease;
-}
-
-.minimalist-landing.fade-out {
   opacity: 0;
 }
 
-/* Rain canvas - behind the particle canvas */
+.immersive-landing.loaded {
+  opacity: 1;
+}
+
+.immersive-landing.fade-out {
+  opacity: 0;
+}
+
+/* Canvas layers - fullscreen positioning */
 .rain-canvas {
   position: absolute;
   top: 0;
@@ -27,7 +41,6 @@
   z-index: 1;
 }
 
-/* Particle canvas above rain */
 .particle-canvas {
   position: absolute;
   top: 0;
@@ -37,126 +50,255 @@
   z-index: 2;
 }
 
+/* Gradient overlay for added depth */
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(40, 40, 50, 0.2) 0%, rgba(20, 20, 30, 0.8) 100%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Content positioning */
 .centered-content {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   text-align: center;
-  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   padding: 2rem;
 }
 
+/* Title container with animations */
+.title-container {
+  margin-bottom: 5rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1.2s ease forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Advanced title styling with letter animations */
 .main-title {
-  font-size: 5rem;
+  font-size: 6rem;
   font-weight: 200;
-  margin-bottom: 1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(240, 240, 255, 0.9);
+  margin-bottom: 1.5rem;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  display: inline-block;
+  text-shadow: 0 0 20px rgba(150, 150, 255, 0.3);
+}
+
+/* Individual letter animations */
+.main-title span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) rotate(10deg) scale(0.8);
+  animation: letterReveal 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+.letter-t { animation-delay: 0.7s; }
+.letter-h { animation-delay: 0.8s; }
+.letter-i { animation-delay: 0.9s; }
+.letter-n { animation-delay: 1.0s; }
+.letter-k { animation-delay: 1.1s; }
+.letter-b { animation-delay: 1.2s; }
+.letter-o { animation-delay: 1.3s; }
+.letter-x { animation-delay: 1.4s; }
+
+@keyframes letterReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+  }
+}
+
+/* Tagline styling */
+.tagline {
+  font-size: 1.6rem;
+  font-weight: 300;
+  opacity: 0;
+  letter-spacing: 0.1em;
+  color: rgba(200, 200, 230, 0.7);
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 2s;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Action container */
+.action-container {
+  position: relative;
+  margin-top: 2rem;
+  perspective: 800px;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 2.2s;
+}
+
+/* Advanced button styling */
+.enter-button {
+  position: relative;
+  background: transparent;
+  color: rgba(230, 230, 255, 0.9);
+  border: 1px solid rgba(180, 180, 255, 0.3);
+  padding: 1.2rem 3.5rem;
+  font-size: 1.2rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #333;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.tagline {
-  font-size: 1.5rem;
+  cursor: pointer;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  backface-visibility: hidden;
   font-weight: 300;
-  opacity: 0.7;
-  margin-bottom: 4rem;
-  letter-spacing: 0.1em;
-  color: #555;
+  border-radius: 2px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 
-.action-buttons {
-  margin-top: 2rem;
+/* Button text */
+.button-text {
+  position: relative;
+  z-index: 2;
+  transition: all 0.5s ease;
+}
+
+/* Button hover effects */
+.enter-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(100, 100, 255, 0.1), rgba(150, 150, 255, 0.2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  z-index: 1;
+}
+
+.enter-button:hover:before,
+.enter-button.hover:before {
+  transform: scaleX(1);
+}
+
+/* Button glow effect */
+.button-glow {
+  position: absolute;
+  width: 50px;
+  height: 100%;
+  top: 0;
+  left: -100px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(200, 200, 255, 0.2),
+    rgba(200, 200, 255, 0.5),
+    rgba(200, 200, 255, 0.2),
+    transparent
+  );
+  animation: glowSweep 3s linear infinite;
+  transform: skewX(-20deg);
+  z-index: 1;
+}
+
+@keyframes glowSweep {
+  0% {
+    left: -100px;
+  }
+  100% {
+    left: calc(100% + 100px);
+  }
 }
 
 /* Heartbeat animation */
+.enter-button {
+  animation: heartbeat 2s infinite;
+}
+
 @keyframes heartbeat {
   0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(100, 100, 100, 0.5);
+    transform: scale(1) translateZ(0);
+    box-shadow: 0 0 0 0 rgba(150, 150, 255, 0.1);
   }
   25% {
-    transform: scale(1.05);
+    transform: scale(1.05) translateZ(20px);
+    box-shadow: 0 0 15px 5px rgba(150, 150, 255, 0.3);
   }
   40% {
-    transform: scale(1);
-    box-shadow: 0 0 0 5px rgba(100, 100, 100, 0);
+    transform: scale(1) translateZ(0);
+    box-shadow: 0 0 0 0 rgba(150, 150, 255, 0);
   }
   60% {
-    transform: scale(1.03);
+    transform: scale(1.03) translateZ(10px);
+    box-shadow: 0 0 10px 3px rgba(150, 150, 255, 0.2);
   }
   100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(100, 100, 100, 0);
+    transform: scale(1) translateZ(0);
+    box-shadow: 0 0 0 0 rgba(150, 150, 255, 0);
   }
 }
 
-.enter-button {
-  background: rgba(80, 80, 80, 0.1);
-  color: #444;
-  border: 1px solid rgba(80, 80, 80, 0.3);
-  padding: 1rem 3rem;
-  font-size: 1.2rem;
-  border-radius: 2px;
-  cursor: pointer;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  position: relative;
-  overflow: hidden;
-  animation: heartbeat 2s infinite;
-  transition: all 0.3s ease;
-  display: inline-block; /* Ensure the button is visible */
-}
-
-.enter-button:hover {
-  border-color: rgba(80, 80, 80, 0.8);
-  background: rgba(80, 80, 80, 0.2);
+.enter-button:hover,
+.enter-button.hover {
   animation-play-state: paused;
-}
-
-.enter-button:after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: #444;
-  transition: all 0.3s ease;
-}
-
-.enter-button:hover:after {
-  width: 100%;
+  transform: scale(1.05) translateZ(10px);
+  box-shadow: 0 5px 25px rgba(100, 100, 255, 0.4);
+  border-color: rgba(180, 180, 255, 0.6);
+  text-shadow: 0 0 10px rgba(200, 200, 255, 0.5);
 }
 
 .enter-button.entering {
-  border-color: #555;
-  background: #555;
-  color: white;
   animation: none;
-  transform: scale(1.1);
+  transform: scale(1.2) translateZ(50px) rotateX(10deg);
+  background: rgba(180, 180, 255, 0.2);
+  border-color: rgba(200, 200, 255, 0.8);
+  box-shadow: 0 10px 40px rgba(100, 100, 255, 0.5);
+  transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-.footer-text {
+/* Interaction hint */
+.interaction-hint {
   position: absolute;
   bottom: 2rem;
-  font-size: 0.8rem;
-  opacity: 0.6;
-  z-index: 3;
-  color: #555;
+  font-size: 0.9rem;
+  opacity: 0;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(200, 200, 230, 0.5);
+  z-index: 4;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 3s;
 }
 
-/* For 1920x1080 screens */
-@media (min-width: 1920px) {
+/* Media queries for responsive design */
+@media (max-width: 1200px) {
   .main-title {
-    font-size: 6rem;
-  }
-  
-  .tagline {
-    font-size: 1.8rem;
+    font-size: 5rem;
   }
 }
 
-/* For smaller screens */
 @media (max-width: 768px) {
   .main-title {
     font-size: 3.5rem;
@@ -167,7 +309,22 @@
   }
   
   .enter-button {
-    padding: 0.8rem 2rem;
+    padding: 1rem 2.5rem;
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 2.5rem;
+  }
+  
+  .tagline {
+    font-size: 1rem;
+  }
+  
+  .enter-button {
+    padding: 0.8rem 2rem;
+    font-size: 0.9rem;
   }
 }
