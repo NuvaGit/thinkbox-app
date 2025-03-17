@@ -25,18 +25,6 @@ const LandingPage = ({ onEnter }) => {
     const ctx = rainCanvas.getContext('2d');
     let raindrops = [];
     
-    // Set canvas size to match window - truly fullscreen
-    const resizeCanvas = () => {
-      rainCanvas.width = window.innerWidth;
-      rainCanvas.height = window.innerHeight;
-      
-      // Re-initialize raindrops on resize
-      initRaindrops();
-    };
-    
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    
     // Create sophisticated raindrop class
     class Raindrop {
       constructor() {
@@ -114,7 +102,17 @@ const LandingPage = ({ onEnter }) => {
       }
     };
     
-    initRaindrops();
+    // Set canvas size to match window - truly fullscreen
+    const resizeCanvas = () => {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+      
+      // Re-initialize raindrops on resize
+      initRaindrops();
+    };
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
     
     // Animation loop for rain
     const animateRain = () => {
@@ -248,22 +246,6 @@ const LandingPage = ({ onEnter }) => {
     
     initParticles();
     
-    // Animation loop with connection lines between close particles
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw and update each particle
-      for (const particle of particles) {
-        particle.draw();
-        particle.update();
-      }
-      
-      // Connect particles that are close to each other
-      connectParticles();
-      
-      animationFrame = requestAnimationFrame(animate);
-    };
-    
     // Function to draw lines between particles that are close to each other
     const connectParticles = () => {
       const maxDistance = 100;
@@ -287,6 +269,22 @@ const LandingPage = ({ onEnter }) => {
           }
         }
       }
+    };
+    
+    // Animation loop
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw and update each particle
+      for (const particle of particles) {
+        particle.draw();
+        particle.update();
+      }
+      
+      // Connect particles that are close to each other
+      connectParticles();
+      
+      animationFrame = requestAnimationFrame(animate);
     };
     
     animate();
