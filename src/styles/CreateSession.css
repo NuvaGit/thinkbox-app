@@ -293,4 +293,132 @@
     .slogan-text {
       font-size: 1.4rem;
     }
+   
   }
+  /* Add these styles to your existing CreateSession.css file */
+
+/* Back button container */
+.back-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+/* Back button styling */
+.back-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  background-color: transparent;
+  color: #b39ddb;
+  border: 1px solid rgba(179, 157, 219, 0.4);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.back-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(106, 61, 185, 0.1), 
+    rgba(179, 157, 219, 0.2), 
+    rgba(106, 61, 185, 0.1)
+  );
+  transition: all 0.4s ease;
+  z-index: -1;
+}
+
+.back-button:hover,
+.back-button.hovered {
+  color: white;
+  border-color: rgba(179, 157, 219, 0.8);
+  box-shadow: 0 2px 8px rgba(106, 61, 185, 0.3);
+  transform: translateY(-2px);
+  letter-spacing: 0.5px;
+}
+
+.back-button:hover::before,
+.back-button.hovered::before {
+  left: 100%;
+}
+
+.back-button:active {
+  transform: translateY(0);
+}
+
+.back-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  transition: transform 0.3s ease;
+}
+
+.back-button:hover .back-icon,
+.back-button.hovered .back-icon {
+  transform: translateX(-3px);
+}
+
+/* Pulse effect */
+.pulse-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-color: rgba(179, 157, 219, 0.1);
+  z-index: -2;
+  opacity: 0;
+}
+
+.back-button:hover .pulse-effect,
+.back-button.hovered .pulse-effect {
+  animation: pulse 1.5s infinite;
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  70% {
+    transform: scale(1.05);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+}
+
+/* Add this to ensure spacing between create button and back button */
+.create-button {
+  margin-bottom: 5px;
+}
+
+/* Optional: Add a subtle divider between create button and back button */
+.back-button-container::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 25%;
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(106, 61, 185, 0), 
+    rgba(106, 61, 185, 0.3), 
+    rgba(106, 61, 185, 0)
+  );
+}

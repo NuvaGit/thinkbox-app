@@ -3,7 +3,7 @@ import '../styles/CreateSession.css';
 // Import your mountain image
 import mountainBackground from '../assets/images/purplemountain.jpg';
 
-const CreateSession = ({ onCreateSession }) => {
+const CreateSession = ({ onCreateSession, onBack }) => {
   const [sessionData, setSessionData] = useState({
     title: '',
     description: '',
@@ -12,6 +12,7 @@ const CreateSession = ({ onCreateSession }) => {
   });
   
   const [sloganVisible, setSloganVisible] = useState(false);
+  const [backButtonHovered, setBackButtonHovered] = useState(false);
 
   // Generate a random session code
   function generateSessionCode() {
@@ -53,6 +54,12 @@ const CreateSession = ({ onCreateSession }) => {
     }
   };
 
+  const handleBackClick = () => {
+    if (onBack) {
+      onBack();
+    }
+  };
+
   return (
     <div className="create-session-page">
       <div className="mountain-background">
@@ -61,7 +68,7 @@ const CreateSession = ({ onCreateSession }) => {
       
       {/* Animated App Slogan Above Box */}
       <div className={`app-slogan ${sloganVisible ? 'visible' : ''}`}>
-        <p className="slogan-text">Turn your thoughts into action.</p>
+        <p className="slogan-text"></p>
       </div>
       
       <div className="create-session-container">
@@ -132,6 +139,25 @@ const CreateSession = ({ onCreateSession }) => {
             <button type="submit" className="create-button">
               Create Session
             </button>
+            
+            {/* Back Button */}
+            <div className="back-button-container">
+              <button 
+                type="button" 
+                className={`back-button ${backButtonHovered ? 'hovered' : ''}`}
+                onClick={handleBackClick}
+                onMouseEnter={() => setBackButtonHovered(true)}
+                onMouseLeave={() => setBackButtonHovered(false)}
+              >
+                <div className="back-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor" />
+                  </svg>
+                </div>
+                <span>Back to Selection</span>
+                <div className="pulse-effect"></div>
+              </button>
+            </div>
           </form>
         </div>
       </div>
