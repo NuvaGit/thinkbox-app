@@ -42,6 +42,7 @@ const WhiteboardToolbar = ({
     { id: 'pan', icon: <Hand size={20} />, label: 'Pan' },
   ];
   
+  
   const predefinedColors = [
     '#000000', // Black
     '#ffffff', // White
