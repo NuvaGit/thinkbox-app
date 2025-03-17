@@ -31,7 +31,7 @@ const WhiteboardToolbar = ({
   const [showSizeSlider, setShowSizeSlider] = useState(false);
   const [theme, setTheme] = useState('light');
   const [expandedSection, setExpandedSection] = useState(null);
-  
+
   
   const tools = [
     { id: 'pen', icon: <Pencil size={20} />, label: 'Pen' },
@@ -42,7 +42,6 @@ const WhiteboardToolbar = ({
     { id: 'circle', icon: <Circle size={20} />, label: 'Circle' },
     { id: 'pan', icon: <Hand size={20} />, label: 'Pan' },
   ];
-
   
   const predefinedColors = [
     '#000000', // Black
