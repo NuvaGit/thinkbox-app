@@ -1,0 +1,207 @@
+.whiteboard-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 70px); /* Adjust based on header height */
+    position: relative;
+    padding: 1rem;
+  }
+  
+  .canvas-container {
+    flex: 1;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    background-color: white;
+    cursor: crosshair;
+  }
+  
+  /* Toolbar Styles */
+  .whiteboard-toolbar {
+    display: flex;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    align-items: center;
+    z-index: 100;
+  }
+  
+  .toolbar-section {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    position: relative;
+  }
+  
+  .toolbar-section:last-child {
+    margin-right: 0;
+  }
+  
+  .toolbar-section.tools {
+    margin-right: 2rem;
+  }
+  
+  /* Tool buttons */
+  .tool-btn {
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .tool-btn:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .tool-btn.active {
+    border-color: #4a6bff;
+    background-color: rgba(74, 107, 255, 0.1);
+  }
+  
+  .tool-icon {
+    font-size: 1.25rem;
+  }
+  
+  /* Color picker */
+  .color-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .color-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  .color-picker-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 200px;
+    z-index: 100;
+  }
+  
+  .predefined-colors {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .predefined-color {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .predefined-color:hover {
+    transform: scale(1.1);
+  }
+  
+  .predefined-color.active {
+    border: 2px solid #333;
+  }
+  
+  .custom-color-input {
+    display: flex;
+    align-items: center;
+  }
+  
+  .custom-color-input input {
+    width: 30px;
+    height: 30px;
+    border: none;
+    padding: 0;
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
+  
+  /* Size picker */
+  .size-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .size-preview {
+    border-radius: 50%;
+    background-color: #333;
+  }
+  
+  .size-slider-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    width: 200px;
+    z-index: 100;
+  }
+  
+  .size-slider-dropdown input {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .size-value {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  
+  /* Action buttons */
+  .action-btn, .file-btn {
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.25rem;
+  }
+  
+  .action-btn:hover, .file-btn:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .clear-btn {
+    color: #dc3545;
+  }

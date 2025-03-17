@@ -1,0 +1,57 @@
+/* Global styles for fullscreen desktop application */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body, #root, .app {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden; /* Prevent scrollbars */
+  }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #0f1014;
+    color: #f0f0f0;
+  }
+  
+  /* Ensure all main containers take full screen */
+  .landing-container,
+  .create-session-page,
+  .dashboard,
+  .whiteboard-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Custom scrollbars for containers that need to scroll */
+  .scrollable-content {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  }
+  
+  .scrollable-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+  }
+  
+  /* For 1920x1080 screens */
+  @media (min-width: 1920px) {
+    .content-container {
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+  }
