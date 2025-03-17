@@ -320,7 +320,7 @@ const LandingPage = ({ onEnter }) => {
   };
   
   return (
-    <div className={`immersive-landing ${isLoaded ? 'loaded' : ''} ${isEntering ? 'fade-out' : ''}`}>
+    <div className={`immersive-landing fullscreen ${isLoaded ? 'loaded' : ''} ${isEntering ? 'fade-out' : ''}`}>
       {/* Rain canvas */}
       <canvas ref={rainCanvasRef} className="rain-canvas"></canvas>
       
@@ -330,19 +330,9 @@ const LandingPage = ({ onEnter }) => {
       {/* Background gradient overlay for depth */}
       <div className="gradient-overlay"></div>
       
-      <div className="centered-content">
-        <div className="title-container">
-          <h1 ref={titleRef} className="main-title">
-            <span className="letter-t">T</span>
-            <span className="letter-h">H</span>
-            <span className="letter-i">I</span>
-            <span className="letter-n">N</span>
-            <span className="letter-k">K</span>
-            <span className="letter-b">B</span>
-            <span className="letter-o">O</span>
-            <span className="letter-x">X</span>
-          </h1>
-          <p className="tagline">Turn Your Ideas Into Reality</p>
+      <div className="content-container">
+        <div className="slogan-container">
+          <h1 className="main-slogan">Turn Your Ideas Into Reality</h1>
         </div>
         
         <div className="action-container">
@@ -359,9 +349,7 @@ const LandingPage = ({ onEnter }) => {
         </div>
       </div>
       
-      <div className="interaction-hint">
-        <p>Move your cursor to interact with the particles</p>
-      </div>
+      
     </div>
   );
 };
