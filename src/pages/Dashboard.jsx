@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/EnhancedDashboard.css';
 import Whiteboard from '../components/whiteboard/Whiteboard';
-import SessionWorkspace from '../components/session/SessionWorkspace';
 import IdeasPage from '../components/ideas/IdeasPage';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';

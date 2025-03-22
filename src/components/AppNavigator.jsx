@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import LandingPage from "../pages/LandingPage";
 import SessionSelection from "../pages/SessionSelectionPage";
 import CreateSession from "../pages/CreateSession";
 import Dashboard from "../pages/Dashboard";
-import sessionService from "../services/SessionService"; 
+import webSocketSessionService from "../services/WebSocketSessionService"; 
+import webSocketService from "../services/WebSocketService";
 import { toast, ToastContainer } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,11 +21,64 @@ const AppNavigator = () => {
   const [currentPage, setCurrentPage] = useState(Pages.LANDING);
   const [sessionData, setSessionData] = useState(null);
   const [recentSessions, setRecentSessions] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
   
   // Load recent sessions on mount
   useEffect(() => {
-    setRecentSessions(sessionService.getRecentSessions());
+    setRecentSessions(webSocketSessionService.getRecentSessions());
+    
+    // Connect to WebSocket server
+    webSocketService.connect();
+    
+    // Listen for connection status changes
+    const removeConnectionListener = webSocketService.addMessageListener('connection', (status) => {
+      setIsConnected(status.connected);
+      
+      if (status.connected) {
+        toast.success('Connected to server', {
+          position: "bottom-right",
+          autoClose: 2000
+        });
+      } else {
+        toast.warning('Disconnected from server', {
+          position: "bottom-right",
+          autoClose: 2000
+        });
+      }
+    });
+    
+    return () => {
+      removeConnectionListener();
+    };
   }, []);
+  
+  // Handle session data updates
+  const handleSessionUpdate = useCallback((newSessionData, source) => {
+    if (newSessionData) {
+      setSessionData(newSessionData);
+      
+      if (source === 'external') {
+        toast.info('Session updated by another user', {
+          position: "bottom-right",
+          autoClose: 2000
+        });
+      }
+    }
+  }, []);
+  
+  // Subscribe to session updates when session changes
+  useEffect(() => {
+    if (sessionData && sessionData.sessionCode) {
+      const unsubscribe = webSocketSessionService.subscribeToChanges(
+        sessionData.sessionCode,
+        handleSessionUpdate
+      );
+      
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [sessionData, handleSessionUpdate]);
   
   // Navigation handlers
   const navigateTo = (page) => {
@@ -42,13 +96,13 @@ const AppNavigator = () => {
   const handleBackToSelection = () => {
     navigateTo(Pages.SESSION_SELECTION);
     // Refresh recent sessions list
-    setRecentSessions(sessionService.getRecentSessions());
+    setRecentSessions(webSocketSessionService.getRecentSessions());
   };
   
   const handleCreateSession = (sessionData) => {
     try {
       // Create the session using our service
-      const newSession = sessionService.createSession(sessionData);
+      const newSession = webSocketSessionService.createSession(sessionData);
       setSessionData(newSession);
       
       // Show success message
@@ -60,7 +114,7 @@ const AppNavigator = () => {
       navigateTo(Pages.DASHBOARD);
       
       // Update recent sessions
-      setRecentSessions(sessionService.getRecentSessions());
+      setRecentSessions(webSocketSessionService.getRecentSessions());
     } catch (error) {
       toast.error(`Error creating session: ${error.message}`, {
         position: "top-center"
@@ -71,11 +125,11 @@ const AppNavigator = () => {
   const handleJoinSession = (sessionCode) => {
     try {
       // Join the session using our service
-      const joinedSession = sessionService.joinSession(sessionCode);
+      const joinedSession = webSocketSessionService.joinSession(sessionCode);
       setSessionData(joinedSession);
       
       // Show success message
-      toast.success(`Joined session: ${joinedSession.title}`, {
+      toast.success(`Joining session: ${sessionCode}`, {
         position: "top-center",
         autoClose: 3000
       });
@@ -83,7 +137,7 @@ const AppNavigator = () => {
       navigateTo(Pages.DASHBOARD);
       
       // Update recent sessions
-      setRecentSessions(sessionService.getRecentSessions());
+      setRecentSessions(webSocketSessionService.getRecentSessions());
     } catch (error) {
       toast.error(`Error joining session: ${error.message}`, {
         position: "top-center"
@@ -96,7 +150,7 @@ const AppNavigator = () => {
     
     try {
       // Update the session
-      const updatedSession = sessionService.updateSession(
+      const updatedSession = webSocketSessionService.updateSession(
         sessionData.sessionCode, 
         updatedData
       );
@@ -118,13 +172,7 @@ const AppNavigator = () => {
     
     try {
       // Add idea to the session
-      const newIdea = sessionService.addIdea(sessionData.sessionCode, idea);
-      
-      // Update session data to include the new idea
-      setSessionData({
-        ...sessionData,
-        ideas: [...(sessionData.ideas || []), newIdea]
-      });
+      const newIdea = webSocketSessionService.addIdea(sessionData.sessionCode, idea);
       
       toast.success('Idea added successfully', {
         position: "bottom-right",
@@ -145,19 +193,11 @@ const AppNavigator = () => {
     
     try {
       // Update the idea
-      const updatedIdeaData = sessionService.updateIdea(
+      const updatedIdeaData = webSocketSessionService.updateIdea(
         sessionData.sessionCode, 
         ideaId, 
         updatedIdea
       );
-      
-      // Update session data with the edited idea
-      setSessionData({
-        ...sessionData,
-        ideas: sessionData.ideas.map(idea => 
-          idea.id === ideaId ? { ...idea, ...updatedIdea } : idea
-        )
-      });
       
       return updatedIdeaData;
     } catch (error) {
@@ -173,13 +213,7 @@ const AppNavigator = () => {
     
     try {
       // Delete the idea
-      sessionService.deleteIdea(sessionData.sessionCode, ideaId);
-      
-      // Update session data without the deleted idea
-      setSessionData({
-        ...sessionData,
-        ideas: sessionData.ideas.filter(idea => idea.id !== ideaId)
-      });
+      webSocketSessionService.deleteIdea(sessionData.sessionCode, ideaId);
       
       toast.info('Idea deleted', {
         position: "bottom-right",
@@ -197,13 +231,7 @@ const AppNavigator = () => {
     
     try {
       // Add category to the session
-      const newCategory = sessionService.addCategory(sessionData.sessionCode, category);
-      
-      // Update session data to include the new category
-      setSessionData({
-        ...sessionData,
-        categories: [...(sessionData.categories || []), newCategory]
-      });
+      const newCategory = webSocketSessionService.addCategory(sessionData.sessionCode, category);
       
       toast.success('Category added successfully', {
         position: "bottom-right",
@@ -220,12 +248,17 @@ const AppNavigator = () => {
   };
   
   const handleExitSession = () => {
+    // Leave the current session
+    webSocketSessionService.leaveSession();
+    
     // Reset session data
     setSessionData(null);
+    
     // Navigate back to session selection page
     navigateTo(Pages.SESSION_SELECTION);
+    
     // Refresh recent sessions list
-    setRecentSessions(sessionService.getRecentSessions());
+    setRecentSessions(webSocketSessionService.getRecentSessions());
   };
   
   // Render the current page
@@ -267,6 +300,14 @@ const AppNavigator = () => {
     <div className="app-navigator">
       {renderPage()}
       <ToastContainer />
+      
+      {/* Connection status indicator */}
+      <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
+        <div className="status-indicator"></div>
+        <span className="status-text">
+          {isConnected ? 'Connected' : 'Disconnected'}
+        </span>
+      </div>
     </div>
   );
 };
