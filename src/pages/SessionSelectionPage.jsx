@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/SessionSelection.css';
 
-const SessionSelection = ({ onCreateSession, onJoinSession }) => {
+const SessionSelection = ({ onCreateSession, onJoinSession, recentSessions = [] }) => {
   const [sloganVisible, setSloganVisible] = useState(false);
   const [joinCode, setJoinCode] = useState('');
   const [showJoinInput, setShowJoinInput] = useState(false);
   const [buttonHovered, setButtonHovered] = useState(null);
+  const [showRecentSessions, setShowRecentSessions] = useState(false);
   
   // Animate slogan on component mount
   useEffect(() => {
     setTimeout(() => {
       setSloganVisible(true);
     }, 300);
-  }, []);
+    
+    // Show recent sessions if there are any
+    if (recentSessions.length > 0) {
+      setTimeout(() => {
+        setShowRecentSessions(true);
+      }, 800);
+    }
+  }, [recentSessions.length]);
 
   const handleJoinClick = () => {
     setShowJoinInput(true);
@@ -29,6 +37,10 @@ const SessionSelection = ({ onCreateSession, onJoinSession }) => {
 
   const handleCreateClick = () => {
     onCreateSession();
+  };
+  
+  const handleJoinRecent = (sessionCode) => {
+    onJoinSession(sessionCode);
   };
 
   return (
@@ -117,6 +129,32 @@ const SessionSelection = ({ onCreateSession, onJoinSession }) => {
                 </button>
               </div>
             </form>
+          )}
+          
+          {/* Recent Sessions Section */}
+          {!showJoinInput && recentSessions.length > 0 && (
+            <div className={`recent-sessions ${showRecentSessions ? 'visible' : ''}`}>
+              <h3 className="recent-title">Recent Sessions</h3>
+              <div className="recent-list">
+                {recentSessions.map((session, index) => (
+                  <div 
+                    key={session.sessionCode} 
+                    className="recent-item"
+                    onClick={() => handleJoinRecent(session.sessionCode)}
+                  >
+                    <div className="recent-info">
+                      <span className="recent-title">{session.title}</span>
+                      <span className="recent-code">{session.sessionCode}</span>
+                    </div>
+                    <button className="recent-join-btn">
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <path d="M8 5v14l11-7z" fill="currentColor" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>

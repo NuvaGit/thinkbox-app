@@ -654,3 +654,104 @@
   .btn-secondary:hover {
     background-color: var(--light-color);
   }
+
+
+/* Session Workspace */
+.session-workspace {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.session-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.session-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.workspace-content {
+  display: flex;
+  gap: 2rem;
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Session Info Card */
+.session-info-card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-top: 1.5rem;
+  overflow: hidden;
+}
+
+.info-card-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--light-color);
+}
+
+.info-card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.info-card-content {
+  padding: 1rem;
+}
+
+.info-item {
+  margin-bottom: 0.8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.3rem;
+}
+
+.info-value {
+  font-weight: 500;
+}
+
+.info-value.code {
+  font-family: monospace;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  color: var(--primary-color);
+  background-color: var(--light-color);
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.share-session-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.share-session-btn:hover {
+  background-color: var(--primary-hover);
+}

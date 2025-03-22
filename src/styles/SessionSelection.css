@@ -356,3 +356,120 @@
       font-size: 1.4rem;
     }
   }
+
+
+  @media (max-width: 576px) {
+    .session-selection-container {
+      width: 90%;
+    }
+    
+    .slogan-text {
+      font-size: 1.4rem;
+    }
+  }
+  
+  /* Recent Sessions Styles */
+  .recent-sessions {
+    margin-top: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .recent-sessions.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .recent-sessions h3 {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    position: relative;
+  }
+  
+  .recent-sessions h3:after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .recent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+  
+  .recent-list::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .recent-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+  
+  .recent-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  
+  .recent-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .recent-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  .recent-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .recent-info .recent-title {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+  }
+  
+  .recent-info .recent-code {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    font-family: monospace;
+  }
+  
+  .recent-join-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.2s ease;
+  }
+  
+  .recent-item:hover .recent-join-btn {
+    background: rgba(255, 255, 255, 0.3);
+  }
