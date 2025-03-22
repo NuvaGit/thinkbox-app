@@ -25,6 +25,7 @@ const Whiteboard = () => {
   const [isPanning, setIsPanning] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [lastAction, setLastAction] = useState({ type: null, timestamp: null });
+  const canvasContainerRef = useRef(null);
   
   // Mock collaborators data (would come from your backend in a real app)
   const collaborators = [
@@ -33,7 +34,7 @@ const Whiteboard = () => {
     { id: 3, name: 'Theo Williams', avatar: 'https://via.placeholder.com/40', color: '#33FF57', active: false },
   ];
 
-  // Initialize canvas
+  // Initialize canvas on component mount
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -44,8 +45,11 @@ const Whiteboard = () => {
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     
+    // Get container dimensions for proper sizing
+    const container = canvas.parentElement;
+    const { width, height } = container.getBoundingClientRect();
+    
     // Set the internal size to match with DPR adjustment
-    const { width, height } = canvas.getBoundingClientRect();
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     
@@ -60,13 +64,15 @@ const Whiteboard = () => {
     
     // Fill with white background
     context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
     
     // Handle window resize
     const handleResize = () => {
-      const { width, height } = canvas.getBoundingClientRect();
+      // Store current image
       const imageData = context.getImageData(0, 0, canvas.width / dpr, canvas.height / dpr);
       
+      // Update canvas dimensions
+      const { width, height } = container.getBoundingClientRect();
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       
@@ -96,10 +102,13 @@ const Whiteboard = () => {
       } else if (e.key === 'c' && (e.ctrlKey || e.metaKey)) {
         clearCanvas();
       } else if (e.key === '+' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
         setZoom(prev => Math.min(prev + 0.1, 3));
       } else if (e.key === '-' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
         setZoom(prev => Math.max(prev - 0.1, 0.5));
       } else if (e.key === '0' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
         setZoom(1);
         setPanOffset({ x: 0, y: 0 });
       }
@@ -111,11 +120,19 @@ const Whiteboard = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('keydown', handleKeyDown);
     };
+  }, []);
+
+  // Update canvas settings when color or size changes
+  useEffect(() => {
+    if (contextRef.current) {
+      contextRef.current.strokeStyle = color;
+      contextRef.current.lineWidth = size;
+    }
   }, [color, size]);
 
   // Apply zoom and pan on canvas container
   useEffect(() => {
-    const canvasContainer = document.querySelector('.canvas-interactive-area');
+    const canvasContainer = canvasContainerRef.current;
     if (canvasContainer) {
       canvasContainer.style.transform = `scale(${zoom}) translate(${panOffset.x}px, ${panOffset.y}px)`;
     }
@@ -147,10 +164,10 @@ const Whiteboard = () => {
   };
 
   // Start drawing
-  const startDrawing = ({ nativeEvent }) => {
+  const startDrawing = (e) => {
     if (canvasMode !== 'draw' || isPanning) return;
     
-    const { offsetX, offsetY } = nativeEvent;
+    const { offsetX, offsetY } = getCanvasCoordinates(e);
     
     if (tool === 'eraser') {
       contextRef.current.globalCompositeOperation = 'destination-out';
@@ -169,17 +186,30 @@ const Whiteboard = () => {
     saveToHistory();
   };
 
+  // Get canvas coordinates from mouse or touch event
+  const getCanvasCoordinates = (e) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { offsetX: 0, offsetY: 0 };
+    
+    const rect = canvas.getBoundingClientRect();
+    const offsetX = (e.clientX || (e.touches && e.touches[0].clientX) || 0) - rect.left;
+    const offsetY = (e.clientY || (e.touches && e.touches[0].clientY) || 0) - rect.top;
+    
+    return { offsetX, offsetY };
+  };
+
   // Draw
-  const draw = ({ nativeEvent }) => {
+  const draw = (e) => {
     if (!isDrawing || canvasMode !== 'draw') return;
+    
+    const { offsetX, offsetY } = getCanvasCoordinates(e);
     
     // Update cursor position for collaborative cursors
     setCursorPosition({ 
-      x: nativeEvent.offsetX, 
-      y: nativeEvent.offsetY 
+      x: offsetX, 
+      y: offsetY 
     });
     
-    const { offsetX, offsetY } = nativeEvent;
     contextRef.current.lineTo(offsetX, offsetY);
     contextRef.current.stroke();
     
@@ -307,20 +337,23 @@ const Whiteboard = () => {
   };
 
   // Start panning the canvas
-  const startPanning = ({ nativeEvent }) => {
-    if (nativeEvent.button !== 1 && tool !== 'pan') return; // Middle mouse button or pan tool
+  const startPanning = (e) => {
+    if ((e.button !== undefined && e.button !== 1) && tool !== 'pan') return; // Middle mouse button or pan tool
     
     setIsPanning(true);
-    nativeEvent.preventDefault();
+    e.preventDefault();
   };
 
   // Pan the canvas
-  const panCanvas = ({ nativeEvent }) => {
+  const panCanvas = (e) => {
     if (!isPanning) return;
     
+    const movementX = e.movementX || 0;
+    const movementY = e.movementY || 0;
+    
     setPanOffset(prev => ({
-      x: prev.x + nativeEvent.movementX / zoom,
-      y: prev.y + nativeEvent.movementY / zoom
+      x: prev.x + movementX / zoom,
+      y: prev.y + movementY / zoom
     }));
   };
 
@@ -337,9 +370,10 @@ const Whiteboard = () => {
 
   // Handle pointer move for collaborative cursors
   const handlePointerMove = (e) => {
+    const { offsetX, offsetY } = getCanvasCoordinates(e);
     setCursorPosition({ 
-      x: e.nativeEvent.offsetX, 
-      y: e.nativeEvent.offsetY 
+      x: offsetX, 
+      y: offsetY 
     });
     
     // In a real app, this would broadcast cursor position to other users
@@ -443,21 +477,49 @@ const Whiteboard = () => {
       >
         <div className="canvas-container">
           <div 
+            ref={canvasContainerRef}
             className="canvas-interactive-area"
-            onMouseDown={startPanning}
-            onMouseMove={panCanvas}
-            onMouseUp={stopPanning}
-            onMouseLeave={stopPanning}
+            onMouseDown={tool === 'pan' ? startPanning : startDrawing}
+            onMouseMove={(e) => {
+              if (isPanning) {
+                panCanvas(e);
+              } else {
+                draw(e);
+                handlePointerMove(e);
+              }
+            }}
+            onMouseUp={() => {
+              if (isPanning) {
+                stopPanning();
+              } else {
+                finishDrawing();
+              }
+            }}
+            onMouseLeave={() => {
+              if (isPanning) {
+                stopPanning();
+              } else {
+                finishDrawing();
+              }
+            }}
+            onTouchStart={tool === 'pan' ? startPanning : startDrawing}
+            onTouchMove={(e) => {
+              if (isPanning) {
+                // Touch pan handling would need additional logic
+              } else {
+                draw(e);
+              }
+            }}
+            onTouchEnd={() => {
+              if (isPanning) {
+                stopPanning();
+              } else {
+                finishDrawing();
+              }
+            }}
           >
             <canvas
               ref={canvasRef}
-              onMouseDown={startDrawing}
-              onMouseMove={(e) => {
-                draw(e);
-                handlePointerMove(e);
-              }}
-              onMouseUp={finishDrawing}
-              onMouseLeave={finishDrawing}
             />
             
             {/* Collaborative cursors for other users */}
@@ -503,4 +565,5 @@ const Whiteboard = () => {
     </div>
   );
 };
+
 export default Whiteboard;

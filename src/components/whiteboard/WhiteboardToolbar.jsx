@@ -42,6 +42,7 @@ const WhiteboardToolbar = ({
     { id: 'circle', icon: <Circle size={20} />, label: 'Circle' },
     { id: 'pan', icon: <Hand size={20} />, label: 'Pan' },
   ];
+
   
   
   const predefinedColors = [
