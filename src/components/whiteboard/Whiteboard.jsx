@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HexColorPicker } from 'react-colorful';
 import { Users, Share2, Download, Zap, Image, FileText, ChevronRight, Settings } from 'lucide-react';
-import WhiteboardToolbar from './WhiteboardToolbar';
-import CollaboratorsList from './CollaboratorsList';
 import '../../styles/Whiteboard.css';
 
 const Whiteboard = () => {
