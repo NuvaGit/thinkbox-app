@@ -193,7 +193,7 @@ class WebSocketService {
         return false;
       }
       
-      try {
+            try {
         this.ws.send(JSON.stringify({
           type: 'update_session',
           sessionCode,
