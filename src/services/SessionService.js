@@ -10,7 +10,60 @@ class SessionService {
           isPublic: true,
           sessionCode: 'ABC123',
           createdAt: new Date(),
-          ideas: [],
+          ideas: [
+            {
+              id: 1,
+              title: 'Add AI-powered recommendation system',
+              description: 'Implement machine learning to suggest relevant content based on user behavior and preferences.',
+              categoryId: 2,
+              author: 'Alex Chen',
+              createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+              votes: 12,
+              isPinned: true,
+              isArchived: false,
+              isInVoting: false,
+              isAnonymous: false
+            },
+            {
+              id: 2,
+              title: 'Mobile app with offline mode',
+              description: 'Create a mobile application that allows users to access and work with their data even without an internet connection.',
+              categoryId: 2,
+              author: 'Anonymous User',
+              createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+              votes: 8,
+              isPinned: false,
+              isArchived: false,
+              isInVoting: true,
+              isAnonymous: true
+            },
+            {
+              id: 3,
+              title: 'Launch referral program',
+              description: 'Implement a referral system where users earn rewards for bringing in new customers.',
+              categoryId: 3,
+              author: 'Maya Johnson',
+              createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+              votes: 5,
+              isPinned: false,
+              isArchived: true,
+              isInVoting: false,
+              isAnonymous: false
+            },
+            {
+              id: 4,
+              title: 'Integrate with popular third-party tools',
+              description: 'Add integrations with tools like Slack, Trello, and Google Workspace to enhance productivity.',
+              categoryId: 2,
+              author: 'Theo Williams',
+              createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+              votes: 9,
+              isPinned: false,
+              isArchived: false,
+              isInVoting: false,
+              isAnonymous: false
+            }
+          ],
           categories: [
             { id: 1, name: 'Uncategorized', color: '#999999' },
             { id: 2, name: 'Feature Ideas', color: '#4CAF50' },
@@ -23,7 +76,47 @@ class SessionService {
           isPublic: true,
           sessionCode: 'XYZ789',
           createdAt: new Date(),
-          ideas: [],
+          ideas: [
+            {
+              id: 5,
+              title: 'Holiday-themed social media campaign',
+              description: 'Create a series of engaging posts featuring holiday themes to boost engagement during Q4.',
+              categoryId: 2,
+              author: 'Jamie Lee',
+              createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+              votes: 7,
+              isPinned: true,
+              isArchived: false,
+              isInVoting: false,
+              isAnonymous: false
+            },
+            {
+              id: 6,
+              title: 'Influencer partnerships',
+              description: 'Collaborate with niche influencers to reach targeted audience segments.',
+              categoryId: 2,
+              author: 'Anonymous User',
+              createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+              votes: 11,
+              isPinned: false,
+              isArchived: false,
+              isInVoting: true,
+              isAnonymous: true
+            },
+            {
+              id: 7,
+              title: 'Email campaign automation',
+              description: 'Set up automated email sequences based on user behavior to increase conversions.',
+              categoryId: 3,
+              author: 'Sam Peterson',
+              createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
+              votes: 4,
+              isPinned: false,
+              isArchived: false,
+              isInVoting: false,
+              isAnonymous: false
+            }
+          ],
           categories: [
             { id: 1, name: 'Uncategorized', color: '#999999' },
             { id: 2, name: 'Social Media', color: '#9C27B0' },
@@ -118,7 +211,11 @@ class SessionService {
         id: Date.now(),
         createdAt: new Date(),
         votes: 0,
-        author: idea.author || 'Anonymous User'
+        author: idea.author || 'Anonymous User',
+        isPinned: idea.isPinned || false,
+        isArchived: idea.isArchived || false,
+        isInVoting: idea.isInVoting || false,
+        isAnonymous: idea.isAnonymous || false
       };
       
       this.sessions[sessionCode].ideas.push(newIdea);
