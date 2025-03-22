@@ -3,6 +3,8 @@ import '../styles/EnhancedDashboard.css';
 import Whiteboard from '../components/whiteboard/Whiteboard';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
+import IdeasPage from '../components/ideas/IdeasPage';
+
 
 // Dashboard tabs enum
 const DashboardTabs = {
