@@ -1,10 +1,11 @@
+// src/pages/Dashboard.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/EnhancedDashboard.css';
 import Whiteboard from '../components/whiteboard/Whiteboard';
+import SessionWorkspace from '../components/session/SessionWorkspace';
+import IdeasPage from '../components/ideas/IdeasPage';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
-import IdeasPage from '../components/ideas/IdeasPage';
-
 
 // Dashboard tabs enum
 const DashboardTabs = {
@@ -17,7 +18,15 @@ const DashboardTabs = {
   SETTINGS: 'settings',
 };
 
-const Dashboard = ({ sessionData, onExitSession }) => {
+const Dashboard = ({ 
+  sessionData, 
+  onExitSession,
+  onUpdateSession,
+  onAddIdea,
+  onEditIdea,
+  onDeleteIdea,
+  onAddCategory
+}) => {
   const [activeTab, setActiveTab] = useState(DashboardTabs.OVERVIEW);
   const [isFullscreen, setIsFullscreen] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -61,12 +70,16 @@ const Dashboard = ({ sessionData, onExitSession }) => {
       document.documentElement.style.setProperty('--primary-color', themeColors[themeColor].primary);
       document.documentElement.style.setProperty('--secondary-color', themeColors[themeColor].secondary);
       document.documentElement.style.setProperty('--accent-color', themeColors[themeColor].accent);
+      
+      // Also set RGB values for use in transparent backgrounds
+      const hexToRgb = (hex) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+      };
+      
+      document.documentElement.style.setProperty('--primary-color-rgb', hexToRgb(themeColors[themeColor].primary));
     }
   }, [themeColor]);
-  
-
-
-
   
   // Handle fullscreen toggle
   const toggleFullscreen = () => {
@@ -105,7 +118,14 @@ const Dashboard = ({ sessionData, onExitSession }) => {
         return <Whiteboard />;
       
       case DashboardTabs.IDEAS:
-        return <PlaceholderTab title="Ideas Collection" />;
+        return (
+          <IdeasPage 
+            sessionData={sessionData}
+            onAddIdea={onAddIdea}
+            onEditIdea={onEditIdea}
+            onDeleteIdea={onDeleteIdea}
+          />
+        );
       
       case DashboardTabs.VOTING:
         return <PlaceholderTab title="Voting & Prioritization" />;
@@ -155,26 +175,26 @@ const Dashboard = ({ sessionData, onExitSession }) => {
         style={{ width: isSidebarCollapsed ? '60px' : `${sidebarWidth}px` }}
       >
         <div className="sidebar-header">
-  <h2 className="logo">
-    {isSidebarCollapsed ? 'TB' : 'ThinkBox'}
-    <span className="logo-dot"></span>
-  </h2>
-  <button 
-    className="collapse-btn" 
-    onClick={toggleSidebar}
-    aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-  >
-    {isSidebarCollapsed ? (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8.59 16.59L13.17 12L8.59 7.41L10 6L16 12L10 18L8.59 16.59Z" fill="currentColor"/>
-      </svg>
-    ) : (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15.41 16.59L10.83 12L15.41 7.41L14 6L8 12L14 18L15.41 16.59Z" fill="currentColor"/>
-      </svg>
-    )}
-  </button>
-</div>
+          <h2 className="logo">
+            {isSidebarCollapsed ? 'TB' : 'ThinkBox'}
+            <span className="logo-dot"></span>
+          </h2>
+          <button 
+            className="collapse-btn" 
+            onClick={toggleSidebar}
+            aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {isSidebarCollapsed ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.59 16.59L13.17 12L8.59 7.41L10 6L16 12L10 18L8.59 16.59Z" fill="currentColor"/>
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.41 16.59L10.83 12L15.41 7.41L14 6L8 12L14 18L15.41 16.59Z" fill="currentColor"/>
+              </svg>
+            )}
+          </button>
+        </div>
         
         <nav className="sidebar-nav">
           <ul>
@@ -455,6 +475,8 @@ const OverviewTab = ({ sessionData, themeColor }) => {
             <div className="card-header">
               <h3>Quick Actions</h3>
             </div>
+            
+           
             
             <div className="card-content">
               <div className="action-grid">
