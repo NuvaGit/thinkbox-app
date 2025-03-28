@@ -1,3 +1,6 @@
+
+Gave uo on this for now started without a plan so codebase is a mess 
+
 # ThinkBox: Collaborative Brainstorming Platform
 
 
